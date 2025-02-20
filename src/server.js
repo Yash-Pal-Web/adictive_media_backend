@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
   
   const createAccountRoutes = require("./routes/createAccount");
   const mediaRoutes = require("./routes/mediaRoutes");
@@ -18,6 +19,7 @@ mongoose
   .catch((e) => console.log(e));
 
 //use middlewares
+app.use(cors());
 app.use(express.json());
 
   app.use("/create", createAccountRoutes);
