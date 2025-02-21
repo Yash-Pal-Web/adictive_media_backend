@@ -1,8 +1,9 @@
 const Account = require("../models/createAccount");
 const generateRandomPassword = require("../utils/generatePassword");
 const generateTokens = require("../utils/generateToken"); 
+const sendMail = require("../utils/sendMail");
 
-const createAccount = async (req, res) => {
+ const createAccount = async (req, res) => {
   
   try {
     const { firstName, lastName, email, number } = req.body;
@@ -22,9 +23,18 @@ const createAccount = async (req, res) => {
 
     // Create new account with the generated password
     account = new Account({ firstName, lastName, email, number, password });
+    
+
+    await sendMail({
+      firstName: account.firstName,
+      lastName: account.lastName,
+      email: account.email,
+      password: account.password
+    });
+
 
     await account.save();
-
+ 
     res.status(201).json({
       success: true,
       data: { firstName, lastName, email, number, password },
@@ -36,7 +46,43 @@ const createAccount = async (req, res) => {
       message: "Some error occurred",
     });
   }
-};
+}; 
+
+/* const createAccount = async(req,res)=>{
+  try {
+    const { firstName, lastName, email, password } = req.body;
+
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+    });
+
+    // Save the user
+    await newUser.save();
+
+    // Call sendMail function
+    await sendMail({
+      body: {
+        firstName,
+        lastName,
+        email,
+        password, // You can send the original password or a temporary one
+      },
+    });
+
+    res.status(201).json({ success: true, message: "Account created successfully!" });
+  } catch (error) {
+    console.error("Error creating account:", error);
+    res.status(500).json({ success: false, message: "Error creating account" });
+  }
+}
+ */
+
 /*            Login Api                        */
 const login = async (req, res) => {
   try {

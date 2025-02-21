@@ -7,6 +7,7 @@ const {
   getMediaById,
 } = require("../controllers/mediaController");
 const { authenticateRequest } = require("../middleware/authMiddleware");
+const { userOnly }  = require('../middleware/accessMiddleware');
 
 const router = express.Router();
 
@@ -53,7 +54,7 @@ router.post(
 );
 
 router.get("/get", authenticateRequest, getAllMedias);
-router.get("/get/:id", authenticateRequest, getMediaById);
+router.get("/get/:id",authenticateRequest, userOnly, getMediaById);
 
 
 module.exports = router;

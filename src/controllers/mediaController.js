@@ -172,7 +172,7 @@ const getAllMedias = async (req, res) => {
 
 const getMediaById = async (req, res) => {
   try {
-    const { accountId } = req.params; // Extract accountId from request params
+    const { accountId } = req.query; // Extract accountId from request params
     const page = parseInt(req.query.page) || 1; // Default to page 1
     const limit = parseInt(req.query.limit) || 5; // Default to 5 media per page
     const skip = (page - 1) * limit;
